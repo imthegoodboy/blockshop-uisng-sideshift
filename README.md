@@ -47,9 +47,22 @@ Deployment output prints the `Marketplace` address. Copy it.
 ```bash
 cd ../web
 
+# Copy environment example and configure your keys
+cp .env.example .env.local
 
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
 ```
+
+### Environment Variables
+Create `.env.local` in the `web` directory with:
+- `WEB3_STORAGE_TOKEN`: Get from web3.storage for IPFS uploads
+- `SIDESHIFT_API_KEY`: Your SideShift API key
+- `NEXT_PUBLIC_MARKETPLACE_ADDRESS`: Deployed contract address
+- `NEXT_PUBLIC_WALLETCONNECT_ID`: WalletConnect project ID
 Open http://localhost:3000.
 
 ## 4) App usage

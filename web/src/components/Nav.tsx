@@ -19,7 +19,7 @@ export default function Nav() {
             <div className="mx-auto max-w-7xl px-6 h-20 flex items-center justify-between gap-8">
                 <div className="flex items-center gap-6">
                     <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-                        <img src="/logo.png" alt="BlockShopy" className="h-12 w-auto" />
+                        <img src="/image.png" alt="BlockShopy" className="h-12 w-auto" />
                     </Link>
                     <nav className="hidden md:flex items-center gap-6">
                         <Link href="/explore" className="text-sm font-medium hover:text-yellow-600">Explore</Link>

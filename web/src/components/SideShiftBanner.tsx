@@ -9,7 +9,7 @@ export default function SideShiftBanner() {
             <span className="flex items-center text-sm font-medium">
               <span className="hidden md:inline">🚀 Powered by </span>
               <img
-                src="https://sideshift.ai/assets/sideshift.svg"
+                src="https://images.ctfassets.net/23fkqdsgbpuj/1cKwj8jvGmJz9aErPUs4aA/ad0fad2afe07885fff48158975bc0dde/sideshift-mini.png"
                 alt="SideShift"
                 className="h-5 mx-2"
               />

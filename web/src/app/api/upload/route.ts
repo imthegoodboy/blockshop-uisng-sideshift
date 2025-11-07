@@ -1,15 +1,18 @@
 import { NextRequest } from "next/server";
-import lighthouse from "@lighthouse-web3/sdk";
+import { Web3Storage } from 'web3.storage';
+
+function getStorageClient() {
+  const token = process.env.WEB3_STORAGE_TOKEN;
+  if (!token) {
+    throw new Error('Web3.Storage token not configured');
+  }
+  return new Web3Storage({ token });
+}
 
 export async function POST(req: NextRequest) {
     try {
-        const apiKey = process.env.NEXT_PUBLIC_LIGHTHOUSE_API_KEY || process.env.LIGHTHOUSE_API_KEY;
-        if (!apiKey) {
-            return new Response(JSON.stringify({ error: "Lighthouse API key not configured" }), { 
-                status: 500,
-                headers: { "Content-Type": "application/json" }
-            });
-        }
+        // Get Web3.Storage client
+        const client = getStorageClient();
 
         const formData = await req.formData();
         const file = formData.get("file") as File;
@@ -21,22 +24,28 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const response = await lighthouse.uploadBuffer(buffer, apiKey);
-        const cid = (response as any)?.data?.Hash;
+        try {
+            // Upload to IPFS via Web3.Storage
+            const cid = await client.put([file], {
+                name: file.name,
+                maxRetries: 3
+            });
 
-        if (!cid) {
-            return new Response(JSON.stringify({ error: "Upload failed: no CID returned" }), {
+            return new Response(JSON.stringify({ cid }), {
+                headers: { "Content-Type": "application/json" }
+            });
+        } catch (uploadError: any) {
+            console.error("Upload to IPFS failed:", uploadError);
+            return new Response(JSON.stringify({ 
+                error: "Upload to IPFS failed",
+                details: uploadError?.message
+            }), {
                 status: 500,
                 headers: { "Content-Type": "application/json" }
             });
         }
-
-        return new Response(JSON.stringify({ cid }), {
-            headers: { "Content-Type": "application/json" }
-        });
     } catch (e: any) {
-        console.error("Upload error:", e);
+        console.error("Server error during upload:", e);
         return new Response(JSON.stringify({ error: e?.message || "Upload failed" }), {
             status: 500,
             headers: { "Content-Type": "application/json" }
